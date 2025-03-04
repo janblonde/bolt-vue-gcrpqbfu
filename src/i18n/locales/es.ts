@@ -81,5 +81,22 @@ export default {
     emailSent: 'Se ha enviado un correo electrónico de confirmación a su dirección de correo electrónico.',
     done: 'Hecho'
   },
+  areaHome: {
+    welcomeTo: 'Bienvenido a',
+    sendMessage: 'Envíenos un mensaje',
+    noInfoAvailable: 'No hay información disponible sobre el área.'
+  },
+  sendMail: {
+    sendEmailTo: 'Enviar correo electrónico a',
+    yourEmailAddress: 'Su dirección de correo electrónico',
+    subject: 'Asunto',
+    message: 'Mensaje',
+    sendMessage: 'Enviar mensaje',
+    close: 'Cerrar',
+    emailRequired: 'El correo electrónico es obligatorio',
+    invalidEmail: 'Por favor, introduzca una dirección de correo electrónico válida',
+    subjectRequired: 'El asunto es obligatorio',
+    messageRequired: 'El mensaje es obligatorio'
+  },
   languageName: 'Español'
 };

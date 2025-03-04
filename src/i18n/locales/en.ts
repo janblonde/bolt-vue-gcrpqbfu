@@ -81,5 +81,22 @@ export default {
     emailSent: 'A confirmation email has been sent to your email address.',
     done: 'Done'
   },
+  areaHome: {
+    welcomeTo: 'Welcome to',
+    sendMessage: 'Send us a message',
+    noInfoAvailable: 'No area information available.'
+  },
+  sendMail: {
+    sendEmailTo: 'Send email to',
+    yourEmailAddress: 'Your Email address',
+    subject: 'Subject',
+    message: 'Message',
+    sendMessage: 'Send message',
+    close: 'Close',
+    emailRequired: 'Email is required',
+    invalidEmail: 'Please enter a valid email address',
+    subjectRequired: 'Subject is required',
+    messageRequired: 'Message is required'
+  },
   languageName: 'English'
 };

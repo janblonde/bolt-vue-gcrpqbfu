@@ -43,6 +43,16 @@ const routes = [
     component: () => import('../views/RegistrationFinishedPage.vue'),
   },
   {
+    path: '/area-home',
+    name: 'AreaHome',
+    component: () => import('../views/AreaHomePage.vue'),
+  },
+  {
+    path: '/send-mail',
+    name: 'SendMail',
+    component: () => import('../views/SendMailPage.vue'),
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/'
   }
@@ -55,8 +65,8 @@ const router = createRouter({
 
 // Navigation guard to handle routing based on site properties
 router.beforeEach((to, from, next) => {
-  // Skip routing logic if going to home page
-  if (to.name === 'Home') {
+  // Skip routing logic if going to home page or area home page
+  if (to.name === 'Home' || to.name === 'AreaHome' || to.name === 'SendMail') {
     return next();
   }
   

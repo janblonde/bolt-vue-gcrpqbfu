@@ -81,5 +81,22 @@ export default {
     emailSent: 'Er is een bevestigingsmail verzonden naar uw e-mailadres.',
     done: 'Klaar'
   },
+  areaHome: {
+    welcomeTo: 'Welkom bij',
+    sendMessage: 'Stuur ons een bericht',
+    noInfoAvailable: 'Geen gebiedsinformatie beschikbaar.'
+  },
+  sendMail: {
+    sendEmailTo: 'Stuur e-mail naar',
+    yourEmailAddress: 'Uw e-mailadres',
+    subject: 'Onderwerp',
+    message: 'Bericht',
+    sendMessage: 'Bericht versturen',
+    close: 'Sluiten',
+    emailRequired: 'E-mail is verplicht',
+    invalidEmail: 'Voer een geldig e-mailadres in',
+    subjectRequired: 'Onderwerp is verplicht',
+    messageRequired: 'Bericht is verplicht'
+  },
   languageName: 'Nederlands'
 };
