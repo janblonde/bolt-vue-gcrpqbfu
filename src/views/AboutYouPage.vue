@@ -129,7 +129,7 @@ const calculateUntilDate = (fromDate) => {
 // Send welcome email
 const sendWelcomeEmail = async (registrationId) => {
   try {
-    console.log(registrationId);
+    //console.log(registrationId);
     const response = await fetch(`https://sendwelcomemail-2ox4dfqmkq-uc.a.run.app?registrationid=${registrationId}`);
     //const data = await response.json();
     //console.log('Welcome email API response:', data);
