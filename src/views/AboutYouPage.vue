@@ -20,7 +20,7 @@ const countryCode = ref('+31'); // Default to Netherlands
 const keepMeUpdated = ref(false);
 const agreeToTerms = ref(false);
 
-// List of countries with their codes for phone number parsing
+// List of countries with their codes for phone number parsing!
 const countries = [
   { code: '+1', name: 'United States' },
   { code: '+44', name: 'United Kingdom' },
