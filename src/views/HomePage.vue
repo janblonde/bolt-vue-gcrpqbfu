@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n';
 import { db } from '../firebase';
 import { currentSite, areaRules } from '../store';
 import type { Site, AreaRule } from '../types';
+import LoadingSpinner from '../components/LoadingSpinner.vue';
 
 const router = useRouter();
 const { locale } = useI18n();
@@ -164,15 +165,6 @@ const fetchSiteData = async () => {
   }
 };
 
-// We don't need this watch anymore as the WelcomePage component will handle language changes
-// and fetch area rules directly when needed
-// Watch for language changes to update area rules
-// watch(locale, async (newLocale) => {
-//   if (currentSite.value) {
-//     await fetchAreaRules(currentSite.value.siteID, newLocale);
-//   }
-// });
-
 onMounted(() => {
   fetchSiteData();
 });
@@ -181,79 +173,84 @@ onMounted(() => {
 <template>
   <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
     <div class="container mx-auto px-4 py-8">
-      <div class="flex justify-center mb-8">
-        <a href="https://vitejs.dev" target="_blank" class="mr-4">
-          <img src="/vite.svg" class="h-16" alt="Vite logo" />
-        </a>
-        <a href="https://vuejs.org/" target="_blank">
-          <img src="../assets/vue.svg" class="h-16" alt="Vue logo" />
-        </a>
+      <!-- Loading Spinner -->
+      <div v-if="siteLoading" class="flex flex-col items-center justify-center min-h-[70vh]">
+        <LoadingSpinner size="lg" color="green" />
+        <p class="mt-4 text-gray-600 dark:text-gray-400">Loading site data...</p>
       </div>
       
-      <h1 class="text-4xl font-bold text-center text-gray-900 dark:text-white mb-6">Campsite App</h1>
-      
-      <!-- Site Information Section -->
-      <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-8">
-        <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">Site Information</h2>
-        
-        <div v-if="siteLoading" class="text-center py-4">
-          <p class="text-gray-500 dark:text-gray-400">Loading site data...</p>
+      <!-- Content (only shown when not loading) -->
+      <div v-else>
+        <div class="flex justify-center mb-8">
+          <a href="https://vitejs.dev" target="_blank" class="mr-4">
+            <img src="/vite.svg" class="h-16" alt="Vite logo" />
+          </a>
+          <a href="https://vuejs.org/" target="_blank">
+            <img src="../assets/vue.svg" class="h-16" alt="Vue logo" />
+          </a>
         </div>
         
-        <div v-else-if="siteError" class="p-4 bg-red-100 text-red-700 rounded-md mb-4">
-          <p>{{ siteError }}</p>
-          <p class="text-sm mt-2">
-            Please add the site parameter to the URL (e.g., ?site=your-site-id)
-          </p>
-        </div>
+        <h1 class="text-4xl font-bold text-center text-gray-900 dark:text-white mb-6">Campsite App</h1>
         
-        <div v-else-if="site.id" class="space-y-4">
-          <h3 class="text-lg font-semibold text-gray-800 dark:text-white">{{ site.name }}</h3>
+        <!-- Site Information Section -->
+        <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-8">
+          <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">Site Information</h2>
           
-          <div class="grid grid-cols-2 gap-2 text-sm">
-            <div class="text-gray-600 dark:text-gray-400">Site ID:</div>
-            <div class="text-gray-800 dark:text-gray-200">{{ site.siteID }}</div>
-            
-            <div class="text-gray-600 dark:text-gray-400">Status:</div>
-            <div class="text-gray-800 dark:text-gray-200">{{ site.status }}</div>
-            
-            <div class="text-gray-600 dark:text-gray-400">Price per night:</div>
-            <div class="text-gray-800 dark:text-gray-200">€{{ site.pricePerNight }}</div>
-            
-            <div class="text-gray-600 dark:text-gray-400">Available places:</div>
-            <div class="text-gray-800 dark:text-gray-200">{{ site.availablePlaces }}</div>
-            
-            <div class="text-gray-600 dark:text-gray-400">Checkout time:</div>
-            <div class="text-gray-800 dark:text-gray-200">{{ site.checkoutTime }}:00</div>
-            
-            <div class="text-gray-600 dark:text-gray-400">Email:</div>
-            <div class="text-gray-800 dark:text-gray-200">{{ site.email }}</div>
-            
-            <div class="text-gray-600 dark:text-gray-400">Max nights:</div>
-            <div class="text-gray-800 dark:text-gray-200">{{ site.maxNrOfNights }}</div>
-            
-            <div class="text-gray-600 dark:text-gray-400">Tourism tax:</div>
-            <div class="text-gray-800 dark:text-gray-200">
-              {{ site.tourismTax ? `€${site.tourismTaxPerVisitor} per ${site.tourismTaxOnlyAdults ? 'adult' : 'visitor'}` : 'No' }}
-            </div>
+          <div v-if="siteError" class="p-4 bg-red-100 text-red-700 rounded-md mb-4">
+            <p>{{ siteError }}</p>
+            <p class="text-sm mt-2">
+              Please add the site parameter to the URL (e.g., ?site=your-site-id)
+            </p>
           </div>
           
-          <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
-            <h4 class="font-medium text-gray-700 dark:text-gray-300 mb-2">Options</h4>
-            <ul class="space-y-1">
-              <li v-if="site.electricityOption" class="flex items-center">
-                <span class="text-green-500 mr-2">✓</span>
-                <span class="text-gray-700 dark:text-gray-300">Electricity (€{{ site.priceForElectricity }})</span>
-              </li>
-              <li v-if="site.onlyWaterOption" class="flex items-center">
-                <span class="text-green-500 mr-2">✓</span>
-                <span class="text-gray-700 dark:text-gray-300">Water (€{{ site.priceForWater }})</span>
-              </li>
-              <li v-if="site.automaticGate" class="flex items-center">
-                <span class="text-green-500 mr-2">✓</span>
-                <span class="text-gray-700 dark:text-gray-300">Automatic gate</span>
-              </li>
-            </ul>
+          <div v-else-if="site.id" class="space-y-4">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white">{{ site.name }}</h3>
+            
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <div class="text-gray-600 dark:text-gray-400">Site ID:</div>
+              <div class="text-gray-800 dark:text-gray-200">{{ site.siteID }}</div>
+              
+              <div class="text-gray-600 dark:text-gray-400">Status:</div>
+              <div class="text-gray-800 dark:text-gray-200">{{ site.status }}</div>
+              
+              <div class="text-gray-600 dark:text-gray-400">Price per night:</div>
+              <div class="text-gray-800 dark:text-gray-200">€{{ site.pricePerNight }}</div>
+              
+              <div class="text-gray-600 dark:text-gray-400">Available places:</div>
+              <div class="text-gray-800 dark:text-gray-200">{{ site.availablePlaces }}</div>
+              
+              <div class="text-gray-600 dark:text-gray-400">Checkout time:</div>
+              <div class="text-gray-800 dark:text-gray-200">{{ site.checkoutTime }}:00</div>
+              
+              <div class="text-gray-600 dark:text-gray-400">Email:</div>
+              <div class="text-gray-800 dark:text-gray-200">{{ site.email }}</div>
+              
+              <div class="text-gray-600 dark:text-gray-400">Max nights:</div>
+              <div class="text-gray-800 dark:text-gray-200">{{ site.maxNrOfNights }}</div>
+              
+              <div class="text-gray-600 dark:text-gray-400">Tourism tax:</div>
+              <div class="text-gray-800 dark:text-gray-200">
+                {{ site.tourismTax ? `€${site.tourismTaxPerVisitor} per ${site.tourismTaxOnlyAdults ? 'adult' : 'visitor'}` : 'No' }}
+              </div>
+            </div>
+            
+            <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
+              <h4 class="font-medium text-gray-700 dark:text-gray-300 mb-2">Options</h4>
+              <ul class="space-y-1">
+                <li v-if="site.electricityOption" class="flex items-center">
+                  <span class="text-green-500 mr-2">✓</span>
+                  <span class="text-gray-700 dark:text-gray-300">Electricity (€{{ site.priceForElectricity }})</span>
+                </li>
+                <li v-if="site.onlyWaterOption" class="flex items-center">
+                  <span class="text-green-500 mr-2">✓</span>
+                  <span class="text-gray-700 dark:text-gray-300">Water (€{{ site.priceForWater }})</span>
+                </li>
+                <li v-if="site.automaticGate" class="flex items-center">
+                  <span class="text-green-500 mr-2">✓</span>
+                  <span class="text-gray-700 dark:text-gray-300">Automatic gate</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

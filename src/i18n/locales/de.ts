@@ -11,6 +11,11 @@ export default {
     registerPay: 'Registrieren & Bezahlen',
     register: 'Registrieren'
   },
+  choice: {
+    spendNight: 'Ich möchte übernachten (€{price})',
+    onlyWater: 'Ich möchte nur Wasser ablassen/auffüllen (€{price})',
+    haveReservation: 'Ich habe eine Reservierung'
+  },
   nights: {
     title: 'Wie viele Nächte möchten Sie bleiben?',
     planToStay: 'Ich plane zu bleiben für',
@@ -21,6 +26,60 @@ export default {
     peopleAgeRestriction: 'die 18 Jahre oder älter sind',
     useElectricity: 'Ich möchte Strom nutzen (€{price}/Nacht)',
     next: 'Weiter'
+  },
+  license: {
+    title: 'Wie lautet Ihr Kennzeichen?',
+    enterPlate: 'Geben Sie Ihr Kennzeichen ein',
+    plateHelp: 'Bitte geben Sie das Kennzeichen Ihres Fahrzeugs ein',
+    bookingSummary: 'Buchungsübersicht',
+    next: 'Weiter'
+  },
+  aboutYou: {
+    title: 'Über Sie',
+    emailAddress: 'Ihre E-Mail-Adresse',
+    mobileNumber: 'Ihre Handynummer',
+    invalidEmail: 'Bitte geben Sie eine gültige E-Mail-Adresse ein',
+    invalidPhone: 'Bitte geben Sie eine gültige Telefonnummer ein',
+    keepUpdated: 'Halten Sie mich auf dem Laufenden',
+    keepUpdatedDescription: 'Damit wir Sie im Falle von Feuer/Überschwemmung erreichen und über lokale Ereignisse informieren können.',
+    agreeTerms: 'Ich stimme den Allgemeinen Geschäftsbedingungen zu',
+    read: 'lesen',
+    electricity: 'Strom',
+    yes: 'Ja',
+    next: 'Weiter'
+  },
+  payment: {
+    title: 'Zahlungsübersicht',
+    bookingDetails: 'Buchungsdetails',
+    paymentDetails: 'Zahlungsdetails',
+    site: 'Standort',
+    licensePlate: 'Kennzeichen',
+    nights: 'Nächte',
+    people: 'Personen',
+    electricity: 'Strom',
+    yes: 'Ja',
+    stayAmount: 'Aufenthalt ({nights} Nächte)',
+    electricityAmount: 'Strom',
+    additionalVisitors: 'Zusätzliche Besucher',
+    tourismTax: 'Kurtaxe',
+    total: 'Gesamt',
+    paymentMethod: 'Zahlungsmethode',
+    cardPayment: 'Kredit-/Debitkarte',
+    processing: 'Verarbeitung...',
+    pay: '€{amount} bezahlen',
+    paymentError: 'Zahlung fehlgeschlagen. Bitte versuchen Sie es erneut.'
+  },
+  registration: {
+    success: 'Registrierung erfolgreich!',
+    thankYou: 'Vielen Dank für Ihre Registrierung. Ihr Aufenthalt wurde bestätigt.',
+    details: 'Registrierungsdetails',
+    site: 'Standort',
+    licensePlate: 'Kennzeichen',
+    nights: 'Nächte',
+    electricity: 'Strom',
+    yes: 'Ja',
+    emailSent: 'Eine Bestätigungs-E-Mail wurde an Ihre E-Mail-Adresse gesendet.',
+    done: 'Fertig'
   },
   languageName: 'Deutsch'
 };

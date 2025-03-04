@@ -69,3 +69,13 @@ export interface AreaRule {
   createdAt?: TimeStamp;
   updatedAt?: TimeStamp;
 }
+
+export interface BookingDetails {
+  nrOfNights: number;
+  nrOfVisitors: number;
+  useElectricity: boolean;
+  licensePlate?: string;
+  email?: string;
+  phoneNumber?: string;
+  keepMeUpdated?: boolean;
+}

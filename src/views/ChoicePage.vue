@@ -1,55 +1,85 @@
 <script setup lang="ts">
-import { currentSite, areaRules } from '../store';
+import { currentSite } from '../store';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import LanguageSwitcher from '../components/LanguageSwitcher.vue';
 
 const { t } = useI18n();
+const router = useRouter();
+
+// Navigation functions
+const goToWelcomePage = () => {
+  console.log('Navigating to Welcome page');
+  router.push('/welcome');
+};
+
+const goToNightsPage = () => {
+  router.push({ name: 'Nights' });
+};
+
+const goToReservation = () => {
+  // This would navigate to a reservation page in the future
+  // For now, just log that it was clicked
+  console.log('Reservation button clicked');
+};
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-    <div class="container mx-auto px-4 py-8">
-      <div class="flex justify-between items-center mb-4">
+  <div class="min-h-screen bg-white flex flex-col">
+    <!-- Header with icons -->
+    <div class="flex justify-between items-center p-4">
+      <div>
         <span class="text-3xl" aria-label="Waving hand">👋</span>
+      </div>
+      <div>
         <LanguageSwitcher />
       </div>
-      
-      <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-8">
-        <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Choice Page</h1>
-        
-        <div v-if="currentSite" class="space-y-4">
-          <p class="text-gray-700 dark:text-gray-300">
-            {{ t('welcome.greeting') }} {{ currentSite.name }}!
-          </p>
-          
-          <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-md">
-            <p class="text-blue-800 dark:text-blue-200">
-              This is a placeholder for the Choice Page.
-            </p>
-            <p class="text-blue-700 dark:text-blue-300 mt-2">
-              You are seeing this page because:
-            </p>
-            <ul class="list-disc ml-5 mt-2 text-blue-700 dark:text-blue-300">
-              <li v-if="currentSite.reservationsAllowed">Reservations are allowed</li>
-              <li v-if="currentSite.onlyWaterOption">Water option is available</li>
-            </ul>
-          </div>
-          
-          <div class="mt-6">
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Site Details</h2>
-            <div class="grid grid-cols-2 gap-2 text-sm">
-              <div class="text-gray-600 dark:text-gray-400">Site ID:</div>
-              <div class="text-gray-800 dark:text-gray-200">{{ currentSite.siteID }}</div>
-              
-              <div class="text-gray-600 dark:text-gray-400">Price per night:</div>
-              <div class="text-gray-800 dark:text-gray-200">€{{ currentSite.pricePerNight }}</div>
-            </div>
-          </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex-grow px-5 py-4">
+      <div v-if="currentSite" class="space-y-6">
+        <!-- Welcome heading -->
+        <div>
+          <h2 class="text-xl font-medium text-gray-700">{{ t('welcome.greeting') }}</h2>
+          <h1 class="text-3xl font-bold text-gray-900">{{ currentSite.name }}</h1>
         </div>
-        
-        <div v-else class="text-center py-4">
-          <p class="text-red-500">No site data available</p>
+
+        <!-- Buttons section -->
+        <div class="space-y-4 mt-8">
+          <!-- Spend the night button -->
+          <button 
+            @click="goToWelcomePage"
+            class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center"
+          >
+            <span class="mr-2">🛏️</span>
+            <span>{{ t('choice.spendNight', { price: currentSite.pricePerNight }) }}</span>
+          </button>
+          
+          <!-- Water only button -->
+          <button 
+            v-if="currentSite.onlyWaterOption"
+            @click="goToNightsPage"
+            class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center"
+          >
+            <span class="mr-2">💧</span>
+            <span>{{ t('choice.onlyWater', { price: currentSite.priceForWater }) }}</span>
+          </button>
+          
+          <!-- Reservation button -->
+          <button 
+            v-if="currentSite.reservationsAllowed"
+            @click="goToReservation"
+            class="w-full border border-green-500 text-green-500 hover:bg-green-50 font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center"
+          >
+            <span class="mr-2">📅</span>
+            <span>{{ t('choice.haveReservation') }}</span>
+          </button>
         </div>
+      </div>
+
+      <div v-else class="flex justify-center items-center h-full">
+        <p class="text-red-500">No site data available</p>
       </div>
     </div>
   </div>

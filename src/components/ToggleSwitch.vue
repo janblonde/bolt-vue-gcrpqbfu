@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   modelValue: boolean;
   label: string;
 }>();
@@ -9,7 +9,7 @@ const emit = defineEmits<{
 }>();
 
 const toggle = () => {
-  emit('update:modelValue', !modelValue);
+  emit('update:modelValue', !props.modelValue);
 };
 </script>
 

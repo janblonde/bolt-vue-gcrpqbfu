@@ -23,6 +23,26 @@ const routes = [
     component: () => import('../views/NightsPage.vue'),
   },
   {
+    path: '/license',
+    name: 'License',
+    component: () => import('../views/LicensePage.vue'),
+  },
+  {
+    path: '/about-you',
+    name: 'AboutYou',
+    component: () => import('../views/AboutYouPage.vue'),
+  },
+  {
+    path: '/payment-summary',
+    name: 'PaymentSummary',
+    component: () => import('../views/PaymentSummaryPage.vue'),
+  },
+  {
+    path: '/registration-finished',
+    name: 'RegistrationFinished',
+    component: () => import('../views/RegistrationFinishedPage.vue'),
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/'
   }
@@ -42,22 +62,47 @@ router.beforeEach((to, from, next) => {
   
   // If we have a site loaded
   if (currentSite.value) {
-    const site = currentSite.value;
+    // Allow direct navigation between pages
+    if (from.name === 'Choice' && to.name === 'Welcome') {
+      return next();
+    }
     
     // Allow navigation to Nights page if coming from Welcome or Choice
     if (to.name === 'Nights' && (from.name === 'Welcome' || from.name === 'Choice')) {
       return next();
     }
     
+    // Allow navigation to License page if coming from Nights
+    if (to.name === 'License' && from.name === 'Nights') {
+      return next();
+    }
+    
+    // Allow navigation to AboutYou page if coming from License
+    if (to.name === 'AboutYou' && from.name === 'License') {
+      return next();
+    }
+    
+    // Allow navigation to PaymentSummary page if coming from AboutYou
+    if (to.name === 'PaymentSummary' && from.name === 'AboutYou') {
+      return next();
+    }
+    
+    // Allow navigation to RegistrationFinished page if coming from AboutYou or PaymentSummary
+    if (to.name === 'RegistrationFinished' && (from.name === 'AboutYou' || from.name === 'PaymentSummary')) {
+      return next();
+    }
+    
     // Route to ChoicePage if reservationsAllowed or onlyWaterOption is true
-    if (site.reservationsAllowed || site.onlyWaterOption) {
-      if (to.name !== 'Choice' && to.name !== 'Nights') {
+    if (currentSite.value.reservationsAllowed || currentSite.value.onlyWaterOption) {
+      if (to.name !== 'Choice' && to.name !== 'Nights' && to.name !== 'License' && 
+          to.name !== 'AboutYou' && to.name !== 'PaymentSummary' && to.name !== 'RegistrationFinished') {
         return next({ name: 'Choice' });
       }
     } 
     // Otherwise route to WelcomePage
     else {
-      if (to.name !== 'Welcome' && to.name !== 'Nights') {
+      if (to.name !== 'Welcome' && to.name !== 'Nights' && to.name !== 'License' && 
+          to.name !== 'AboutYou' && to.name !== 'PaymentSummary' && to.name !== 'RegistrationFinished') {
         return next({ name: 'Welcome' });
       }
     }

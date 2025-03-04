@@ -1,35 +1,135 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { currentSite } from '../store';
+import { currentSite, bookingDetails } from '../store';
 import LanguageSwitcher from '../components/LanguageSwitcher.vue';
 import CountController from '../components/CountController.vue';
 import ToggleSwitch from '../components/ToggleSwitch.vue';
+import LoadingSpinner from '../components/LoadingSpinner.vue';
 
 const { t } = useI18n();
 const router = useRouter();
 
 // State for the form
-const nights = ref(1);
-const people = ref(4);
-const useElectricity = ref(false);
+const nights = ref(bookingDetails.value.nrOfNights);
+const people = ref(bookingDetails.value.nrOfVisitors);
+const useElectricity = ref(bookingDetails.value.useElectricity);
+const isLoadingAvailability = ref(false);
+const availabilityMaxNights = ref<number | null>(null);
 
-// Computed properties
-const maxNights = computed(() => {
+// Watch for changes in bookingDetails and update local state
+onMounted(() => {
+  // Ensure form values match bookingDetails on mount
+  nights.value = bookingDetails.value.nrOfNights;
+  people.value = bookingDetails.value.nrOfVisitors;
+  useElectricity.value = bookingDetails.value.useElectricity;
+});
+
+// Computed properties for max nights
+const siteMaxNights = computed(() => {
   return currentSite.value?.maxNrOfNights || 7;
 });
 
+// Check if max nights should be applied
+const shouldApplyMaxNights = computed(() => {
+  return currentSite.value?.applyMaxNrOfNights || false;
+});
+
+// Determine the effective maximum nights (minimum of site max and availability max)
+const effectiveMaxNights = computed(() => {
+  if (!shouldApplyMaxNights.value) return undefined;
+  
+  if (availabilityMaxNights.value !== null) {
+    return Math.min(siteMaxNights.value, availabilityMaxNights.value);
+  }
+  
+  return siteMaxNights.value;
+});
+
+// Check if reservations are allowed
+const reservationsAllowed = computed(() => {
+  return currentSite.value?.reservationsAllowed || false;
+});
+
+// Check if people selection should be visible
+const shouldShowPeopleSelection = computed(() => {
+  if (!currentSite.value) return false;
+  return currentSite.value.pricePerVisitor > 0 || currentSite.value.tourismTax;
+});
+
+// Check if age restriction text should be shown
+const shouldShowAgeRestriction = computed(() => {
+  return currentSite.value?.tourismTaxOnlyAdults || false;
+});
+
+// Check if electricity option should be shown
+const shouldShowElectricityOption = computed(() => {
+  return currentSite.value?.electricityOption || false;
+});
+
+// Fetch availability data from API
+const fetchAvailabilityData = async () => {
+  if (!reservationsAllowed.value || !currentSite.value) return;
+  
+  isLoadingAvailability.value = true;
+  try {
+    // Add the siteID query parameter to the API call
+    const siteID = currentSite.value.siteID;
+    const response = await fetch(`https://checks-checkfutureavailability-2ox4dfqmkq-uc.a.run.app?siteID=${siteID}`);
+    const data = await response.json();
+    console.log(data);
+    
+    if (data && data.response) {
+      availabilityMaxNights.value = data.response;
+      console.log('Availability max nights:', availabilityMaxNights.value);
+      
+      // If current nights value exceeds the new max, adjust it
+      if (shouldApplyMaxNights.value && nights.value > effectiveMaxNights.value) {
+        nights.value = effectiveMaxNights.value;
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching availability data:', error);
+  } finally {
+    isLoadingAvailability.value = false;
+  }
+};
+
 // Navigation functions
 const goBack = () => {
+  // Update bookingDetails before navigating back
+  updateBookingDetails();
   router.back();
 };
 
 const goNext = () => {
-  // For now, just go back to welcome page
-  // In a real app, this would navigate to the next step
-  router.push({ name: 'Welcome' });
+  // Store the form values in the global state
+  updateBookingDetails();
+  
+  // Navigate to the LicensePage
+  router.push({ name: 'License' });
 };
+
+// Update booking details with current form values
+const updateBookingDetails = () => {
+  bookingDetails.value = {
+    ...bookingDetails.value,
+    nrOfNights: nights.value,
+    nrOfVisitors: people.value,
+    useElectricity: useElectricity.value
+  };
+};
+
+// Watch for changes in form values and update bookingDetails
+watch([nights, people, useElectricity], () => {
+  updateBookingDetails();
+});
+
+// Fetch availability data on component mount
+onMounted(() => {
+  fetchAvailabilityData();
+});
 </script>
 
 <template>
@@ -60,17 +160,19 @@ const goNext = () => {
             <CountController 
               v-model="nights" 
               :min="1" 
-              :max="maxNights" 
+              :max="shouldApplyMaxNights ? effectiveMaxNights : undefined" 
               :label="t('nights.nights')" 
             />
+            <LoadingSpinner v-if="isLoadingAvailability" size="sm" class="ml-2" />
           </div>
-          <p class="text-sm text-gray-600 italic">
-            {{ t('nights.maxStay', { nights: maxNights }) }}
+          <!-- Only show max nights warning if applyMaxNrOfNights is true -->
+          <p v-if="shouldApplyMaxNights" class="text-sm text-gray-600 italic">
+            {{ t('nights.maxStay', { nights: effectiveMaxNights }) }}
           </p>
         </div>
 
-        <!-- People selection -->
-        <div class="space-y-1">
+        <!-- People selection - only show when pricePerVisitor > 0 OR tourismTax is true -->
+        <div v-if="shouldShowPeopleSelection" class="space-y-1">
           <p class="text-gray-700">{{ t('nights.with') }}</p>
           <div class="flex items-center">
             <CountController 
@@ -80,13 +182,14 @@ const goNext = () => {
               :label="t('nights.people')" 
             />
           </div>
-          <p class="text-sm text-gray-600 italic">
+          <!-- Only show age restriction text when tourismTaxOnlyAdults is true -->
+          <p v-if="shouldShowAgeRestriction" class="text-sm text-gray-600 italic">
             {{ t('nights.peopleAgeRestriction') }}
           </p>
         </div>
 
-        <!-- Electricity toggle -->
-        <div v-if="currentSite.electricityOption" class="pt-4">
+        <!-- Electricity toggle - only show when electricityOption is true -->
+        <div v-if="shouldShowElectricityOption" class="pt-4">
           <ToggleSwitch 
             v-model="useElectricity" 
             :label="t('nights.useElectricity', { price: currentSite.priceForElectricity })" 
