@@ -43,8 +43,8 @@ const discoverCamperArea = () => {
       <LanguageSwitcher />
     </div>
 
-    <!-- Main content -->
-    <div class="flex-grow px-5 py-4 flex flex-col items-center justify-center">
+    <!-- Main content - Using a fixed layout with scrollable content -->
+    <div class="flex-grow overflow-y-auto px-5 py-4 pb-20">
       <div v-if="currentSite" class="text-center space-y-6 max-w-md mx-auto">
         <!-- Vehicle emoji will be supplied by the user -->
         <div class="flex justify-center">
@@ -57,29 +57,60 @@ const discoverCamperArea = () => {
           <p class="text-gray-700">Enjoy your stay!</p>
         </div>
         
-        <!-- Button - only shown if visitorRegistrationRequired is true -->
-        <div class="mt-8 w-full">
-          <button 
-            v-if="currentSite.visitorRegistrationRequired"
-            @click="registerVisitors"
-            class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md transition-colors"
-          >
-            Register your visitors
-          </button>
+        <!-- Registration details -->
+        <div class="bg-gray-50 p-4 rounded-lg text-left mt-6">
+          <h2 class="font-medium text-gray-800 mb-2">{{ t('registration.details') }}</h2>
           
-          <button 
-            v-else
-            @click="discoverCamperArea"
-            class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md transition-colors"
-          >
-            Discover the camper area
-          </button>
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <span class="text-gray-600">{{ t('registration.site') }}:</span>
+              <span class="font-medium">{{ currentSite.name }}</span>
+            </div>
+            
+            <div class="flex justify-between">
+              <span class="text-gray-600">{{ t('registration.licensePlate') }}:</span>
+              <span class="font-medium">{{ bookingDetails.licensePlate }}</span>
+            </div>
+            
+            <div class="flex justify-between">
+              <span class="text-gray-600">{{ t('registration.nights') }}:</span>
+              <span class="font-medium">{{ bookingDetails.nrOfNights }}</span>
+            </div>
+            
+            <div v-if="bookingDetails.useElectricity" class="flex justify-between">
+              <span class="text-gray-600">{{ t('registration.electricity') }}:</span>
+              <span class="font-medium">{{ t('registration.yes') }}</span>
+            </div>
+          </div>
         </div>
+        
+        <p class="text-gray-700">
+          {{ t('registration.emailSent') }}
+        </p>
       </div>
 
       <div v-else class="flex justify-center items-center h-full">
         <p class="text-red-500">No site data available</p>
       </div>
+    </div>
+
+    <!-- Footer with button - fixed at bottom -->
+    <div class="p-4 fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100">
+      <button 
+        v-if="currentSite && currentSite.visitorRegistrationRequired"
+        @click="registerVisitors"
+        class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md transition-colors"
+      >
+        Register your visitors
+      </button>
+      
+      <button 
+        v-else
+        @click="discoverCamperArea"
+        class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md transition-colors"
+      >
+        Discover the camper area
+      </button>
     </div>
   </div>
 </template>

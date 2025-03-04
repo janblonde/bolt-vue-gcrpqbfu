@@ -191,30 +191,33 @@ watch(locale, () => {
       <LanguageSwitcher />
     </div>
 
-    <!-- Main content -->
-    <div class="flex-grow px-5 py-2">
-      <!-- Loading state -->
-      <div v-if="isLoading" class="flex justify-center items-center h-64">
-        <LoadingSpinner size="md" color="green" />
-      </div>
-      
-      <!-- Error state -->
-      <div v-else-if="error" class="p-4 bg-red-100 text-red-700 rounded-md">
-        <p>{{ error }}</p>
-        <p class="text-sm mt-2">
-          Please add the site parameter to the URL (e.g., ?site=your-site-id)
-        </p>
-      </div>
-      
-      <!-- Content state -->
-      <div v-else class="space-y-4">
-        <!-- Tent emoji and title -->
-        <div>
+    <!-- Main content - Using a fixed layout with header, scrollable content, and footer -->
+    <div class="flex flex-col h-[calc(100vh-8rem)]">
+      <!-- Title section - fixed at top -->
+      <div class="px-5 py-2">
+        <!-- Loading state -->
+        <div v-if="isLoading" class="flex justify-center items-center h-64">
+          <LoadingSpinner size="md" color="green" />
+        </div>
+        
+        <!-- Error state -->
+        <div v-else-if="error" class="p-4 bg-red-100 text-red-700 rounded-md">
+          <p>{{ error }}</p>
+          <p class="text-sm mt-2">
+            Please add the site parameter to the URL (e.g., ?site=your-site-id)
+          </p>
+        </div>
+        
+        <!-- Title section -->
+        <div v-else class="mb-4">
           <span class="text-3xl" aria-label="Tent">⛺</span>
           <h2 class="text-xl font-medium text-gray-700 mt-2">{{ t('areaHome.welcomeTo') }}</h2>
           <h1 class="text-3xl font-bold text-gray-900">{{ areaName }}</h1>
         </div>
-        
+      </div>
+      
+      <!-- Scrollable content area -->
+      <div v-if="!isLoading && !error" class="flex-1 overflow-y-auto px-5 pb-4">
         <!-- Area info content - rendered as HTML from the database -->
         <div v-if="areaInfo" class="text-gray-800 area-info" v-html="areaInfo"></div>
         
@@ -225,8 +228,8 @@ watch(locale, () => {
       </div>
     </div>
 
-    <!-- Footer with button -->
-    <div class="p-4 mt-auto">
+    <!-- Footer with button - fixed at bottom -->
+    <div class="p-4 mt-auto sticky bottom-0 bg-white border-t border-gray-100">
       <button 
         @click="sendMessage"
         class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md transition-colors"

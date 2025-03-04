@@ -122,8 +122,8 @@ onMounted(() => {
       </button>
     </div>
 
-    <!-- Main content -->
-    <div class="flex-grow px-5 py-2">
+    <!-- Main content - Using a fixed layout with scrollable content -->
+    <div class="flex-grow overflow-y-auto px-5 py-2 pb-20">
       <div class="space-y-6">
         <!-- Email icon and title -->
         <div>
@@ -191,8 +191,8 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- Footer with button -->
-    <div class="p-4 mt-auto">
+    <!-- Footer with button - fixed at bottom -->
+    <div class="p-4 fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100">
       <button 
         @click="sendMessage"
         class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center"
@@ -212,7 +212,7 @@ onMounted(() => {
     <!-- Snackbar -->
     <div 
       v-if="showSnackbar" 
-      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-md shadow-lg text-white text-center min-w-[200px]"
+      class="fixed bottom-20 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-md shadow-lg text-white text-center min-w-[200px]"
       :class="snackbarIsError ? 'bg-red-500' : 'bg-green-500'"
     >
       {{ snackbarMessage }}

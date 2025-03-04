@@ -234,8 +234,8 @@ const openTerms = () => {
       <LanguageSwitcher />
     </div>
 
-    <!-- Main content -->
-    <div class="flex-grow px-5 py-4">
+    <!-- Main content - Using a fixed layout with scrollable content -->
+    <div class="flex-grow overflow-y-auto px-5 py-4 pb-24">
       <div v-if="currentSite" class="space-y-6">
         <!-- About You heading -->
         <div class="space-y-2">
@@ -356,8 +356,8 @@ const openTerms = () => {
       </div>
     </div>
 
-    <!-- Footer with button -->
-    <div class="p-4 mt-auto">
+    <!-- Footer with button - fixed at bottom -->
+    <div class="p-4 fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100">
       <button 
         @click="goNext"
         class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center"
