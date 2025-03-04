@@ -235,7 +235,7 @@ const openTerms = () => {
     </div>
 
     <!-- Main content - Using a fixed layout with scrollable content -->
-    <div class="flex-grow overflow-y-auto px-5 py-4 pb-24">
+    <div class="flex-grow overflow-y-auto px-5 py-4 pb-20">
       <div v-if="currentSite" class="space-y-6">
         <!-- About You heading -->
         <div class="space-y-2">

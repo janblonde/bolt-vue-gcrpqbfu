@@ -24,18 +24,6 @@ body {
   font-family: 'Outfit', sans-serif;
 }
 
-/* Ensure all pages have proper height and scrolling */
-.min-h-screen {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Adjust scrollable content areas */
-.overflow-y-auto {
-  -webkit-overflow-scrolling: touch;
-}
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
