@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -9,7 +9,6 @@ import LoadingSpinner from '../components/LoadingSpinner.vue';
 
 const { t, locale } = useI18n();
 const router = useRouter();
-const route = useRoute();
 
 // State for site data
 const areaName = ref('');

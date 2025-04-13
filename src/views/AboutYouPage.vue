@@ -117,7 +117,7 @@ watch([email, phoneNumber, countryCode, keepMeUpdated], () => {
 });
 
 // Calculate the "until" timestamp based on the number of nights
-const calculateUntilDate = (fromDate) => {
+const calculateUntilDate = (fromDate: Date): Date => {
   // Add nrOfNights days to the from date
   const untilDate = new Date(fromDate);
   untilDate.setDate(untilDate.getDate() + bookingDetails.value.nrOfNights);
@@ -127,14 +127,14 @@ const calculateUntilDate = (fromDate) => {
 };
 
 // Send welcome email
-const sendWelcomeEmail = async (registrationId) => {
+const sendWelcomeEmail = async (registrationId: string): Promise<void> => {
   try {
     console.log(registrationId);
-    const response = await fetch(`https://sendwelcomemail-2ox4dfqmkq-uc.a.run.app?registrationid=${registrationId}`);
+    await fetch(`https://sendwelcomemail-2ox4dfqmkq-uc.a.run.app?registrationid=${registrationId}`);
   } catch (error) {
     console.error('Error sending welcome email:', error);
     // Don't throw the error - we don't want to fail the registration if email fails
-    return { success: false, error: error.message };
+    return;
   }
 };
 

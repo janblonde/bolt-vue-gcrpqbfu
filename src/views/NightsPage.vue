@@ -38,7 +38,7 @@ const shouldApplyMaxNights = computed(() => {
 
 // Determine the effective maximum nights (minimum of site max and availability max)
 const effectiveMaxNights = computed(() => {
-  if (!shouldApplyMaxNights.value) return undefined;
+  if (!shouldApplyMaxNights.value) return null;
   
   if (availabilityMaxNights.value !== null) {
     return Math.min(siteMaxNights.value, availabilityMaxNights.value);
@@ -85,8 +85,9 @@ const fetchAvailabilityData = async () => {
       console.log('Availability max nights:', availabilityMaxNights.value);
       
       // If current nights value exceeds the new max, adjust it
-      if (shouldApplyMaxNights.value && nights.value > effectiveMaxNights.value) {
-        nights.value = effectiveMaxNights.value;
+      const maxNights = effectiveMaxNights.value;
+      if (shouldApplyMaxNights.value && maxNights !== null && nights.value > maxNights) {
+        nights.value = maxNights;
       }
     }
   } catch (error) {
@@ -160,13 +161,13 @@ onMounted(() => {
             <CountController 
               v-model="nights" 
               :min="1" 
-              :max="shouldApplyMaxNights ? effectiveMaxNights : undefined" 
+              :max="shouldApplyMaxNights ? effectiveMaxNights || undefined : undefined" 
               :label="t('nights.nights')" 
             />
             <LoadingSpinner v-if="isLoadingAvailability" size="sm" class="ml-2" />
           </div>
           <!-- Only show max nights warning if applyMaxNrOfNights is true -->
-          <p v-if="shouldApplyMaxNights" class="text-sm text-gray-600 italic">
+          <p v-if="shouldApplyMaxNights && effectiveMaxNights !== null" class="text-sm text-gray-600 italic">
             {{ t('nights.maxStay', { nights: effectiveMaxNights }) }}
           </p>
         </div>
