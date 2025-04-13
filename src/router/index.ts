@@ -53,6 +53,11 @@ const routes = [
     component: () => import('../views/SendMailPage.vue'),
   },
   {
+    path: '/error-max-nights',
+    name: 'ErrorMaxNights',
+    component: () => import('../views/ErrorMaxNightsPage.vue'),
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/'
   }
@@ -99,6 +104,11 @@ router.beforeEach((to, from, next) => {
     
     // Allow navigation to RegistrationFinished page if coming from AboutYou or PaymentSummary
     if (to.name === 'RegistrationFinished' && (from.name === 'AboutYou' || from.name === 'PaymentSummary')) {
+      return next();
+    }
+    
+    // Allow navigation to ErrorMaxNights page from any page
+    if (to.name === 'ErrorMaxNights') {
       return next();
     }
     

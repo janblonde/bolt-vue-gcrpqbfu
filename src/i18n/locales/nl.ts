@@ -79,7 +79,9 @@ export default {
     electricity: 'Elektriciteit',
     yes: 'Ja',
     emailSent: 'Er is een bevestigingsmail verzonden naar uw e-mailadres.',
-    done: 'Klaar'
+    done: 'Klaar',
+    vehicleRegistrationSuccess: 'Voertuig reservatie successful',
+    enjoyStay: 'Geniet van uw verblijf!'
   },
   areaHome: {
     welcomeTo: 'Welkom bij',

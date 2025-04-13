@@ -8,6 +8,8 @@ import LanguageSwitcher from '../components/LanguageSwitcher.vue';
 const { t } = useI18n();
 const router = useRouter();
 const licensePlate = ref('');
+const isChecking = ref(false);
+const checkError = ref('');
 
 // Load the license plate from bookingDetails on component mount
 onMounted(() => {
@@ -33,6 +35,32 @@ const isFormValid = computed(() => {
   return licensePlate.value.trim() !== '';
 });
 
+// Check if the number of nights is allowed
+const checkNightsAllowed = async () => {
+  if (!currentSite.value || !licensePlate.value) return false;
+  
+  isChecking.value = true;
+  checkError.value = '';
+  
+  try {
+    const url = new URL('https://checks-checknrofdaysinperiodokay-2ox4dfqmkq-uc.a.run.app');
+    url.searchParams.append('siteID', currentSite.value.siteID);
+    url.searchParams.append('licensePlate', licensePlate.value);
+    url.searchParams.append('requestedDays', bookingDetails.value.nrOfNights.toString());
+    
+    const response = await fetch(url.toString());
+    const data = await response.json();
+    
+    return data.response === true;
+  } catch (error) {
+    console.error('Error checking nights allowed:', error);
+    checkError.value = 'Failed to verify stay duration. Please try again.';
+    return false;
+  } finally {
+    isChecking.value = false;
+  }
+};
+
 // Navigation functions
 const goBack = () => {
   // Update bookingDetails before navigating back
@@ -40,11 +68,21 @@ const goBack = () => {
   router.back();
 };
 
-const goNext = () => {
+const goNext = async () => {
   if (!isFormValid.value) return;
   
   // Store the license plate in the booking details
   bookingDetails.value.licensePlate = licensePlate.value;
+  
+  // Only perform the check if maxPeriod is true
+  if (currentSite.value?.maxPeriod) {
+    const isAllowed = await checkNightsAllowed();
+    if (!isAllowed) {
+      // Navigate to the error page if check fails
+      router.push({ name: 'ErrorMaxNights' });
+      return;
+    }
+  }
   
   // Navigate to the AboutYouPage
   router.push({ name: 'AboutYou' });
@@ -87,6 +125,11 @@ const goNext = () => {
           <p class="text-sm text-gray-500">
             {{ t('license.plateHelp') }}
           </p>
+          
+          <!-- Error message -->
+          <p v-if="checkError" class="text-sm text-red-500 mt-2">
+            {{ checkError }}
+          </p>
         </div>
       </div>
 
@@ -99,10 +142,16 @@ const goNext = () => {
     <div class="p-4 fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100">
       <button 
         @click="goNext"
-        class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md transition-colors"
-        :disabled="!isFormValid"
-        :class="{ 'opacity-50 cursor-not-allowed': !isFormValid }"
+        class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center"
+        :disabled="!isFormValid || isChecking"
+        :class="{ 'opacity-50 cursor-not-allowed': !isFormValid || isChecking }"
       >
+        <span v-if="isChecking" class="mr-2">
+          <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </span>
         {{ t('license.next') }}
       </button>
     </div>

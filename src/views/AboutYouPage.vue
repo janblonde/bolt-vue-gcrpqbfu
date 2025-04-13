@@ -20,7 +20,7 @@ const countryCode = ref('+31'); // Default to Netherlands
 const keepMeUpdated = ref(false);
 const agreeToTerms = ref(false);
 
-// List of countries with their codes for phone number parsing!
+// List of countries with their codes for phone number parsing
 const countries = [
   { code: '+1', name: 'United States' },
   { code: '+44', name: 'United Kingdom' },
@@ -129,11 +129,8 @@ const calculateUntilDate = (fromDate) => {
 // Send welcome email
 const sendWelcomeEmail = async (registrationId) => {
   try {
-    //console.log(registrationId);
+    console.log(registrationId);
     const response = await fetch(`https://sendwelcomemail-2ox4dfqmkq-uc.a.run.app?registrationid=${registrationId}`);
-    //const data = await response.json();
-    //console.log('Welcome email API response:', data);
-    //return data;
   } catch (error) {
     console.error('Error sending welcome email:', error);
     // Don't throw the error - we don't want to fail the registration if email fails
@@ -179,12 +176,15 @@ const saveRegistration = async () => {
     console.log('Registration saved with ID:', docRef.id);
     
     // Send welcome email with the registration ID
-    await sendWelcomeEmail(docRef.id);
+    sendWelcomeEmail(docRef.id);
     
     console.log('Registration successful!');
     
-    // Navigate to the registration finished page
-    router.push({ name: 'RegistrationFinished' });
+    // Navigate to the registration finished page with the registration ID
+    router.push({ 
+      name: 'RegistrationFinished',
+      query: { registrationId: docRef.id }
+    });
   } catch (error) {
     console.error('Error saving registration:', error);
     submissionError.value = 'Failed to save registration. Please try again.';

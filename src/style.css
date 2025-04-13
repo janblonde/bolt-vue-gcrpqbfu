@@ -24,6 +24,52 @@ body {
   font-family: 'Outfit', sans-serif;
 }
 
+/* Override browser autofill styles */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #111827 !important;
+}
+
+/* Custom checkbox styles */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid #9CA3AF; /* gray-400 */
+  border-radius: 0.25rem;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #111827; /* gray-900 */
+  border-color: #111827;
+}
+
+input[type="checkbox"]:checked::after {
+  content: '';
+  width: 0.375rem;
+  height: 0.625rem;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  position: absolute;
+  transform: rotate(45deg) translate(-2px, -2px);
+}
+
+input[type="checkbox"]:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #E5E7EB; /* gray-200 */
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

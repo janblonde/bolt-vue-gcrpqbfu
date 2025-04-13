@@ -79,7 +79,9 @@ export default {
     electricity: 'Electricity',
     yes: 'Yes',
     emailSent: 'A confirmation email has been sent to your email address.',
-    done: 'Done'
+    done: 'Done',
+    vehicleRegistrationSuccess: 'Vehicle Registration successful',
+    enjoyStay: 'Enjoy your stay!'
   },
   areaHome: {
     welcomeTo: 'Welcome to',

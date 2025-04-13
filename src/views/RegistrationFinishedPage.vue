@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { currentSite, bookingDetails } from '../store';
@@ -6,6 +7,7 @@ import LanguageSwitcher from '../components/LanguageSwitcher.vue';
 
 const { t } = useI18n();
 const router = useRouter();
+const registrationId = ref('');
 
 // Function to go back to home
 const goToHome = () => {
@@ -14,10 +16,14 @@ const goToHome = () => {
 
 // Function to register visitors
 const registerVisitors = () => {
-  // This would navigate to a visitor registration page in the future
-  console.log('Register visitors button clicked');
-  // For now, just go back to home
-  router.push({ name: 'Home' });
+  if (registrationId.value) {
+    // Open the visitor registration page in a new tab
+    window.open(`https://camprea-dev-app.web.app/addVisitorPage?id=${registrationId.value}`, '_blank');
+  } else {
+    console.error('No registration ID available');
+    // Fallback to home if no registration ID is available
+    router.push({ name: 'Home' });
+  }
 };
 
 // Function to discover the camper area
@@ -34,6 +40,10 @@ const discoverCamperArea = () => {
     router.push({ name: 'Home' });
   }
 };
+
+// Get registration ID from URL parameters when the component is mounted
+const urlParams = new URLSearchParams(window.location.search);
+registrationId.value = urlParams.get('registrationId') || '';
 </script>
 
 <template>
@@ -53,35 +63,8 @@ const discoverCamperArea = () => {
         
         <!-- Success message -->
         <div class="space-y-1">
-          <h1 class="text-2xl font-bold text-gray-900">Vehicle Registration successful</h1>
-          <p class="text-gray-700">Enjoy your stay!</p>
-        </div>
-        
-        <!-- Registration details -->
-        <div class="bg-gray-50 p-4 rounded-lg text-left mt-6">
-          <h2 class="font-medium text-gray-800 mb-2">{{ t('registration.details') }}</h2>
-          
-          <div class="space-y-2">
-            <div class="flex justify-between">
-              <span class="text-gray-600">{{ t('registration.site') }}:</span>
-              <span class="font-medium">{{ currentSite.name }}</span>
-            </div>
-            
-            <div class="flex justify-between">
-              <span class="text-gray-600">{{ t('registration.licensePlate') }}:</span>
-              <span class="font-medium">{{ bookingDetails.licensePlate }}</span>
-            </div>
-            
-            <div class="flex justify-between">
-              <span class="text-gray-600">{{ t('registration.nights') }}:</span>
-              <span class="font-medium">{{ bookingDetails.nrOfNights }}</span>
-            </div>
-            
-            <div v-if="bookingDetails.useElectricity" class="flex justify-between">
-              <span class="text-gray-600">{{ t('registration.electricity') }}:</span>
-              <span class="font-medium">{{ t('registration.yes') }}</span>
-            </div>
-          </div>
+          <h1 class="text-2xl font-bold text-gray-900">{{ t('registration.vehicleRegistrationSuccess') }}</h1>
+          <p class="text-gray-700">{{ t('registration.enjoyStay') }}</p>
         </div>
         
         <p class="text-gray-700">
