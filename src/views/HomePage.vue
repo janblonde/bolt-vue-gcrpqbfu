@@ -4,6 +4,7 @@ import { collection, getDocs, query, where, limit } from 'firebase/firestore';
 import { useRouter } from 'vue-router';
 import { db } from '../firebase';
 import { currentSite, clearSiteData } from '../store';
+import type { Site } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner.vue';
 
 const router = useRouter();
@@ -39,12 +40,56 @@ const fetchSiteData = async () => {
     
     if (!querySnapshot.empty) {
       const siteDoc = querySnapshot.docs[0];
-      const siteData = siteDoc.data();
+      const siteData = siteDoc.data() as Omit<Site, 'id'>;
       
-      // Update the global site reference
+      // Update the global site reference with properly typed data
       currentSite.value = {
         id: siteDoc.id,
-        ...siteData
+        siteID: siteData.siteID,
+        name: siteData.name,
+        description: siteData.description,
+        maxPeriod: siteData.maxPeriod,
+        addressRegistrationRequired: siteData.addressRegistrationRequired,
+        algoVersion: siteData.algoVersion,
+        applyMaxNrOfNights: siteData.applyMaxNrOfNights,
+        automaticGate: siteData.automaticGate,
+        automaticGatePIN: siteData.automaticGatePIN,
+        automaticGatePhoneNumber: siteData.automaticGatePhoneNumber,
+        availablePlaces: siteData.availablePlaces,
+        checkAvailablePlaces: siteData.checkAvailablePlaces,
+        checkoutTime: siteData.checkoutTime,
+        creationDate: siteData.creationDate,
+        electricityOption: siteData.electricityOption,
+        email: siteData.email,
+        emailCopy: siteData.emailCopy,
+        freeVisitors: siteData.freeVisitors,
+        hasCheckoutTime: siteData.hasCheckoutTime,
+        location: siteData.location,
+        lowSeasonEnd: siteData.lowSeasonEnd,
+        lowSeasonPrice: siteData.lowSeasonPrice,
+        lowSeasonStart: siteData.lowSeasonStart,
+        maxNrOfNights: siteData.maxNrOfNights,
+        maxPeriodPeriod: siteData.maxPeriodPeriod,
+        minDaysReservationCancellationRefund: siteData.minDaysReservationCancellationRefund,
+        onlyWaterOption: siteData.onlyWaterOption,
+        passportNumberRegistrationRequired: siteData.passportNumberRegistrationRequired,
+        payingSite: siteData.payingSite,
+        priceForElectricity: siteData.priceForElectricity,
+        priceForWater: siteData.priceForWater,
+        pricePerNight: siteData.pricePerNight,
+        pricePerVisitor: siteData.pricePerVisitor,
+        reservationsAllowed: siteData.reservationsAllowed,
+        reservationsCancellationAllowed: siteData.reservationsCancellationAllowed,
+        seasonalPricing: siteData.seasonalPricing,
+        splitAccount: siteData.splitAccount,
+        splitAmount: siteData.splitAmount,
+        status: siteData.status,
+        tourismTax: siteData.tourismTax,
+        tourismTaxOnlyAdults: siteData.tourismTaxOnlyAdults,
+        tourismTaxPerVisitor: siteData.tourismTaxPerVisitor,
+        visitorRegistrationRequired: siteData.visitorRegistrationRequired,
+        waterDevice: siteData.waterDevice,
+        wifiCodes: siteData.wifiCodes
       };
       
       // Route based on site properties
