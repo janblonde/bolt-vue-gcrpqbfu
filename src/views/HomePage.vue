@@ -3,7 +3,7 @@ import { ref, reactive, onMounted } from 'vue';
 import { collection, getDocs, query, where, limit } from 'firebase/firestore';
 import { useRouter } from 'vue-router';
 import { db } from '../firebase';
-import { currentSite } from '../store';
+import { currentSite, clearSiteData } from '../store';
 import type { Site } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner.vue';
 
@@ -70,6 +70,17 @@ const fetchSiteData = async () => {
   
   if (!siteParam) {
     siteError.value = 'No site parameter provided in URL';
+    clearSiteData();
+    return;
+  }
+  
+  // If we already have site data and it matches the URL parameter, skip fetching
+  if (currentSite.value && currentSite.value.siteID === siteParam) {
+    if (currentSite.value.reservationsAllowed || currentSite.value.onlyWaterOption) {
+      router.push({ name: 'Choice' });
+    } else {
+      router.push({ name: 'Welcome' });
+    }
     return;
   }
   
@@ -110,10 +121,12 @@ const fetchSiteData = async () => {
       }
     } else {
       siteError.value = `Site with siteID ${siteParam} not found`;
+      clearSiteData();
     }
   } catch (error) {
     console.error('Error fetching site data:', error);
     siteError.value = 'Error loading site data';
+    clearSiteData();
   } finally {
     siteLoading.value = false;
   }

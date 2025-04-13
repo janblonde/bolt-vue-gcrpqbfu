@@ -6,11 +6,11 @@ const { locale } = useI18n();
 const showDropdown = ref(false);
 
 const languages = [
-  { code: 'en', name: 'English', flag: '/src/assets/uk.png' },
-  { code: 'de', name: 'Deutsch', flag: '/src/assets/de.png' },
-  { code: 'fr', name: 'Français', flag: '/src/assets/fr.png' },
-  { code: 'es', name: 'Español', flag: '/src/assets/es.png' },
-  { code: 'nl', name: 'Nederlands', flag: '/src/assets/nl.png' }
+  { code: 'en', name: 'English', flag: '/flags/uk.png' },
+  { code: 'de', name: 'Deutsch', flag: '/flags/de.png' },
+  { code: 'fr', name: 'Français', flag: '/flags/fr.png' },
+  { code: 'es', name: 'Español', flag: '/flags/es.png' },
+  { code: 'nl', name: 'Nederlands', flag: '/flags/nl.png' }
 ];
 
 const currentLanguage = computed(() => {

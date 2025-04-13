@@ -70,6 +70,15 @@ const router = createRouter({
 
 // Navigation guard to handle routing based on site properties
 router.beforeEach((to, from, next) => {
+  // Get site parameter from URL if present
+  const urlParams = new URLSearchParams(window.location.search);
+  const siteParam = urlParams.get('site');
+  
+  // If we have a site parameter and it's different from the current site, redirect to home
+  if (siteParam && currentSite.value && siteParam !== currentSite.value.siteID) {
+    return next({ name: 'Home' });
+  }
+  
   // Skip routing logic if going to home page or area home page
   if (to.name === 'Home' || to.name === 'AreaHome' || to.name === 'SendMail') {
     return next();
