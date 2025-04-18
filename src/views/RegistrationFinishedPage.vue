@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { currentSite, bookingDetails } from '../store';
+import { currentSite } from '../store';
 import LanguageSwitcher from '../components/LanguageSwitcher.vue';
 
 const { t } = useI18n();
@@ -10,9 +10,9 @@ const router = useRouter();
 const registrationId = ref('');
 
 // Function to go back to home
-const goToHome = () => {
-  router.push({ name: 'Home' });
-};
+// const goToHome = () => {
+//   router.push({ name: 'Home' });
+// };
 
 // Function to register visitors
 const registerVisitors = () => {

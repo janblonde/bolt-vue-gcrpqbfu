@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
+//import { useI18n } from 'vue-i18n';
 import { currentSite, bookingDetails } from '../store';
 import LanguageSwitcher from '../components/LanguageSwitcher.vue';
 import LoadingSpinner from '../components/LoadingSpinner.vue';
 import { ref, computed } from 'vue';
 
-const { t } = useI18n();
+//const { t } = useI18n();
 const router = useRouter();
 const isProcessing = ref(false);
 const paymentError = ref('');

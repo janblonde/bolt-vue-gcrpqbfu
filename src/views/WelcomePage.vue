@@ -39,10 +39,11 @@ const fetchAreaRules = async () => {
       const ruleData = ruleDoc.data() as AreaRule;
       
       // Update the global areaRules reference
-      areaRules.value = {
-        id: ruleDoc.id,
-        ...ruleData
-      };
+      areaRules.value = ruleData;
+      // areaRules.value = {
+      //   id: ruleDoc.id,
+      //   ...ruleData
+      // };
       
       console.log('Area rules loaded:', areaRules.value);
     } else {
@@ -65,10 +66,11 @@ const fetchAreaRules = async () => {
           const fallbackDoc = fallbackSnapshot.docs[0];
           const fallbackData = fallbackDoc.data() as AreaRule;
           
-          areaRules.value = {
-            id: fallbackDoc.id,
-            ...fallbackData
-          };
+          areaRules.value = fallbackData
+          // areaRules.value = {
+          //   id: fallbackDoc.id,
+          //   ...fallbackData
+          // };
           
           console.log('Fallback English rules loaded:', areaRules.value);
         } else {
