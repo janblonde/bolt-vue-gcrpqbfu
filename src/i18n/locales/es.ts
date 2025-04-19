@@ -98,5 +98,11 @@ export default {
     subjectRequired: 'El asunto es obligatorio',
     messageRequired: 'El mensaje es obligatorio'
   },
+  error: {
+    maxNights: {
+      title: 'Ha excedido el número máximo de noches',
+      message: 'Las reglas de esta área permiten una estancia máxima de {maxNights} noches en un período de {maxPeriod} días.'
+    }
+  },
   languageName: 'Español'
 };

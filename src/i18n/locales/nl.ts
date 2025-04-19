@@ -100,5 +100,11 @@ export default {
     subjectRequired: 'Onderwerp is verplicht',
     messageRequired: 'Bericht is verplicht'
   },
+  error: {
+    maxNights: {
+      title: 'U overschrijdt het maximale aantal nachten',
+      message: 'De regels van dit gebied staan een maximaal verblijf toe van {maxNights} nachten in een periode van {maxPeriod} dagen.'
+    }
+  },
   languageName: 'Nederlands'
 };

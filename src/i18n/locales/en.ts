@@ -100,5 +100,11 @@ export default {
     subjectRequired: 'Subject is required',
     messageRequired: 'Message is required'
   },
+  error: {
+    maxNights: {
+      title: 'You exceed the maximum number of nights',
+      message: 'The rules of this area allow a maximum stay of {maxNights} nights, in a period of {maxPeriod} days.'
+    }
+  },
   languageName: 'English'
 };

@@ -98,5 +98,11 @@ export default {
     subjectRequired: 'Betreff ist erforderlich',
     messageRequired: 'Nachricht ist erforderlich'
   },
+  error: {
+    maxNights: {
+      title: 'Sie überschreiten die maximale Anzahl an Nächten',
+      message: 'Die Regeln dieses Bereichs erlauben einen maximalen Aufenthalt von {maxNights} Nächten in einem Zeitraum von {maxPeriod} Tagen.'
+    }
+  },
   languageName: 'Deutsch'
 };
